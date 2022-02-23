@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Hangman Game</title>
+</head>
+<body>
+
+    <!-- script part -->
+    <script>
+        const animal_name_api = "https://gist.githubusercontent.com/borlaym/585e2e09dd6abd9b0d0a/raw/6e46db8f5c27cb18fd1dfa50c7c921a0fbacbad0/animals.json";
+        
+        async function getAnimalName(url){
+
+            const response = await fetch(url);
+            var data = await response.json();
+
+            // get random value from animal name list
+            let randomValueIndex = Math.floor(Math.random() * 224);
+
+            var randomAnimalName = data[randomValueIndex];
+            const randomAnimalNameLength = data[randomValueIndex].length;
+            console.log(randomAnimalNameLength);
+
+            let blankName = '';
+           for(i=0;i<randomAnimalNameLength;i++){
+               blankName += '___ ';
+           }
+           document.getElementById('gussesAnimalName').innerHTML = blankName;
+
+           var findCharFromAnimalName = document.getElementById('work').value; 
+           
+           document.getElementById('work').onclick = function(){
+                let randomAnimalNameUp = randomAnimalName.toUpperCase();
+                console.log(randomAnimalNameUp);
+                var newBlankName = '';
+                for(i=0;i<randomAnimalNameLength;i++){    
+                    if(randomAnimalNameUp[i] == findCharFromAnimalName){
+                        newBlankName += findCharFromAnimalName;
+                    }else{
+                        newBlankName += '___ ';
+                    }
+
+                   
+                }
+                console.log("newBlankName: ",newBlankName);
+           document.getElementById('gussesAnimalName').innerHTML = newBlankName;
+
+            }
+        }
+
+        // call async function
+        getAnimalName(animal_name_api);
+
+    </script>
+
+    <!-- body part -->
+    <div class="container text-center">
+        <div>
+            <h1 class="">Let's play hangman game with me!</h1>
+        </div>
+        <div>
+            <table class="table table-dark table-hover">
+                <tr>
+                    <td colspan="13" class="table-active"><p id="gussesAnimalName"></p></td>
+                </tr>
+                <tr class="table-active">
+                    <td><input type="submit" value="A" id="work" ></td>
+                    <td><input type="submit" value="B" id="work"></td>
+                    <td><input type="submit" value="C" id="work"></td>
+                    <td><input type="submit" value="D" id="work"></td>
+                    <td><input type="submit" value="E" id="work"></td>
+                    <td><input type="submit" value="F" id="work"></td>
+                    <td><input type="submit" value="G" id="work"></td>
+                    <td><input type="submit" value="H" id="work"></td>
+                    <td><input type="submit" value="I" id="work"></td>
+                    <td><input type="submit" value="J" id="work"></td>
+                    <td><input type="submit" value="K" id="work"></td>
+                    <td><input type="submit" value="L" id="work"></td>
+                    <td><input type="submit" value="M" id="work"></td>
+                </tr>
+                <tr class="table-active">
+                    <td><input type="submit" value="N" id="work"></td>
+                    <td><input type="submit" value="O" id="work"></td>
+                    <td><input type="submit" value="P" id="work"></td>
+                    <td><input type="submit" value="Q" id="work"></td>
+                    <td><input type="submit" value="R" id="work"></td>
+                    <td><input type="submit" value="S" id="work"></td>
+                    <td><input type="submit" value="T" id="work"></td>
+                    <td><input type="submit" value="U" id="work"></td>
+                    <td><input type="submit" value="V" id="work"></td>
+                    <td><input type="submit" value="W" id="work"></td>
+                    <td><input type="submit" value="X" id="work"></td>
+                    <td><input type="submit" value="Y" id="work"></td>
+                    <td><input type="submit" value="Z" id="work"></td>
+                </tr>
+            </table> 
+        </div>
+        <div>
+            <p id="dataPrint"></p>
+        </div>
+    </div>
+</body>
+</html>
