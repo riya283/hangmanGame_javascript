@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,54 +10,83 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <title>Hangman Game</title>
 </head>
+
 <body>
 
     <!-- script part -->
     <script>
         const animal_name_api = "https://gist.githubusercontent.com/borlaym/585e2e09dd6abd9b0d0a/raw/6e46db8f5c27cb18fd1dfa50c7c921a0fbacbad0/animals.json";
-        
-        async function getAnimalName(url){
+        var data = '';
+        var newAnimal = '';
+        let id = '';
+        let value = '';
+        let blanckName = '';
+        var newBlankName = '';
+        let counter = 0;
 
+        async function getAnimalName(url) {
             const response = await fetch(url);
-            var data = await response.json();
-
-            // get random value from animal name list
-            let randomValueIndex = Math.floor(Math.random() * 224);
-
-            var randomAnimalName = data[randomValueIndex];
-            const randomAnimalNameLength = data[randomValueIndex].length;
-            console.log(randomAnimalNameLength);
-
-            let blankName = '';
-           for(i=0;i<randomAnimalNameLength;i++){
-               blankName += '___ ';
-           }
-           document.getElementById('gussesAnimalName').innerHTML = blankName;
-
-           var findCharFromAnimalName = document.getElementById('work').value; 
-           
-           document.getElementById('work').onclick = function(){
-                let randomAnimalNameUp = randomAnimalName.toUpperCase();
-                console.log(randomAnimalNameUp);
-                var newBlankName = '';
-                for(i=0;i<randomAnimalNameLength;i++){    
-                    if(randomAnimalNameUp[i] == findCharFromAnimalName){
-                        newBlankName += findCharFromAnimalName;
-                    }else{
-                        newBlankName += '___ ';
-                    }
-
-                   
-                }
-                console.log("newBlankName: ",newBlankName);
-           document.getElementById('gussesAnimalName').innerHTML = newBlankName;
-
-            }
+            data = await response.json();
         }
-
         // call async function
         getAnimalName(animal_name_api);
 
+        function charPassFunction(idValue, buttonValue) {
+            id = idValue;
+            value = buttonValue;
+
+            // number of moves 
+            counter = counter - 1;
+            document.getElementById('numberOfMovesLeft').innerHTML = counter;
+            if(counter == 0){
+                if(newBlankName.includes('-')){
+                    document.getElementById('displayResult').innerHTML = 'OOPS ! you are not guessing word';
+                }else{
+                    document.getElementById('displayResult').innerHTML = 'Congratulation you find correct word';
+                }
+            }
+            // else if((newBlankName.includes('-') == false) || (counter != 0)){
+            //     document.getElementById('displayResult').innerHTML = 'Welldone you find correct word in less moves';
+            // }
+            // code for find char from word in hangman game 
+            if (newBlankName.length == 0) {
+                for (i = 0; i < newAnimal.length; i++) {
+                    if (newAnimal[i] == value) {
+                        newBlankName += value;
+                    } else {
+                        newBlankName += '-';
+                    }
+                }
+                document.getElementById('gussesAnimalName').innerHTML = newBlankName;
+            }else{
+                for(i=0;i<newBlankName.length;i++){
+                    if(newBlankName[i] == '-'){
+                        if(newAnimal[i] == value){
+                            newBlankName = newBlankName.substring(0,i) + value + newBlankName.substring(i+1,newBlankName.length);
+                            // console.log(newBlankName);
+                            document.getElementById('gussesAnimalName').innerHTML = newBlankName;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        function newAnimalName() {
+            newAnimal = data[Math.floor(Math.random() * 223)].toUpperCase();
+            console.log(newAnimal);
+            counter = newAnimal.length;
+            document.getElementById('numberOfMovesLeft').innerHTML = counter;
+            if (blanckName.length == 0) {
+                for (i = 0; i < newAnimal.length; i++) {
+                    blanckName += '-';
+                }
+                document.getElementById('gussesAnimalName').innerHTML = blanckName;
+            } else {
+
+            }
+
+        }
     </script>
 
     <!-- body part -->
@@ -67,43 +97,50 @@
         <div>
             <table class="table table-dark table-hover">
                 <tr>
-                    <td colspan="13" class="table-active"><p id="gussesAnimalName"></p></td>
+                    <td colspan="13" class="table-active">
+                        <h3 id="displayResult"></h3>
+                        <p id="gussesAnimalName"></p>
+                        <p id="numberOfMovesLeft"></p>
+                        <button class="primary" onclick="newAnimalName()">New name for guessing</button>
+                    </td>
                 </tr>
                 <tr class="table-active">
-                    <td><input type="submit" value="A" id="work" ></td>
-                    <td><input type="submit" value="B" id="work"></td>
-                    <td><input type="submit" value="C" id="work"></td>
-                    <td><input type="submit" value="D" id="work"></td>
-                    <td><input type="submit" value="E" id="work"></td>
-                    <td><input type="submit" value="F" id="work"></td>
-                    <td><input type="submit" value="G" id="work"></td>
-                    <td><input type="submit" value="H" id="work"></td>
-                    <td><input type="submit" value="I" id="work"></td>
-                    <td><input type="submit" value="J" id="work"></td>
-                    <td><input type="submit" value="K" id="work"></td>
-                    <td><input type="submit" value="L" id="work"></td>
-                    <td><input type="submit" value="M" id="work"></td>
+                    <td><input type="submit" value="A" id="A" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="B" id="B" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="C" id="C" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="D" id="D" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="E" id="E" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="F" id="F" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="G" id="G" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="H" id="H" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="I" id="I" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="J" id="J" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="K" id="K" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="L" id="L" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="M" id="M" onclick="charPassFunction(id,value)"></td>
                 </tr>
                 <tr class="table-active">
-                    <td><input type="submit" value="N" id="work"></td>
-                    <td><input type="submit" value="O" id="work"></td>
-                    <td><input type="submit" value="P" id="work"></td>
-                    <td><input type="submit" value="Q" id="work"></td>
-                    <td><input type="submit" value="R" id="work"></td>
-                    <td><input type="submit" value="S" id="work"></td>
-                    <td><input type="submit" value="T" id="work"></td>
-                    <td><input type="submit" value="U" id="work"></td>
-                    <td><input type="submit" value="V" id="work"></td>
-                    <td><input type="submit" value="W" id="work"></td>
-                    <td><input type="submit" value="X" id="work"></td>
-                    <td><input type="submit" value="Y" id="work"></td>
-                    <td><input type="submit" value="Z" id="work"></td>
+                    <td><input type="submit" value="N" id="N" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="O" id="O" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="P" id="P" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="Q" id="Q" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="R" id="R" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="S" id="S" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="T" id="T" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="U" id="U" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="V" id="V" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="W" id="W" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="X" id="X" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="Y" id="Y" onclick="charPassFunction(id,value)"></td>
+                    <td><input type="submit" value="Z" id="Z" onclick="charPassFunction(id,value)"></td>
                 </tr>
-            </table> 
+            </table>
         </div>
         <div>
             <p id="dataPrint"></p>
         </div>
     </div>
 </body>
+
 </html>
+
